@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#23458c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>パソコン販買マスター</title>
+<style>
+:root{
+  --bg:#f5f7fb; --card:#fff; --ink:#172033; --muted:#68738a;
+  --blue:#23458c; --blue2:#5f7fca; --line:#e5e9f2; --good:#168464; --warn:#b97513;
+  --shadow:0 10px 30px rgba(28,43,75,.08); --r:22px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic UI",Meiryo,sans-serif}
+button{font:inherit}
+.app{max-width:980px;margin:auto;min-height:100vh;padding:0 16px calc(90px + env(safe-area-inset-bottom))}
+.top{
+ position:sticky;top:0;z-index:20;margin:0 -16px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;
+ background:rgba(245,247,251,.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(225,229,240,.8)
+}
+.toprow{max-width:980px;margin:auto;display:flex;align-items:center;gap:10px;min-height:48px}
+.logo{width:42px;height:42px;border-radius:13px;background:var(--blue);display:grid;place-items:center;color:white;font-size:24px;box-shadow:var(--shadow)}
+.title{font-weight:900;font-size:20px;line-height:1.1}
+.ver{font-size:12px;color:var(--muted);margin-top:3px}
+.back{display:none;border:0;background:white;border:1px solid var(--line);border-radius:12px;padding:9px 12px;font-weight:800}
+.hero{margin:18px 0;background:linear-gradient(135deg,#23458c,#6e8cd5);border-radius:28px;color:white;padding:24px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.hero h1{font-size:30px;line-height:1.15;margin:0 0 8px}.hero p{margin:0;opacity:.92;line-height:1.7}
+.hero-art{position:absolute;right:-18px;bottom:-22px;width:190px;height:160px;opacity:.25}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.menu{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;text-align:left;box-shadow:var(--shadow);min-height:145px;cursor:pointer;transition:.15s}
+.menu:active{transform:scale(.985)} .menu .ico{font-size:34px}.menu h3{margin:9px 0 5px;font-size:18px}.menu p{margin:0;color:var(--muted);font-size:13px;line-height:1.55}
+.section{display:none}.section.active{display:block}.home.hidden{display:none}
+.pagehead{padding:18px 2px 8px}.pagehead h2{font-size:28px;margin:0 0 5px}.pagehead p{color:var(--muted);margin:0;line-height:1.6}
+.card{background:white;border:1px solid var(--line);border-radius:var(--r);padding:20px;margin:14px 0;box-shadow:var(--shadow)}
+.card h3{margin:0 0 8px;font-size:21px}.card p{line-height:1.75;margin:6px 0;color:#364258}
+.diagram{background:#f9fbff;border:1px solid #e4eaf8;border-radius:20px;padding:16px;margin-top:13px}
+.chiprow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.chip{padding:12px 8px;text-align:center;border-radius:15px;background:white;border:1px solid var(--line)}
+.chip b{display:block;font-size:15px;margin-top:6px}.chip span{font-size:11px;color:var(--muted)}
+.bigico{font-size:36px}
+.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:7px}.flowbox{background:#fff;border:1px solid var(--line);padding:13px;border-radius:14px;text-align:center;font-weight:800}.arrow{color:var(--blue);font-weight:900;font-size:22px}
+.bar{height:16px;border-radius:999px;background:#e9edf5;overflow:hidden;margin:7px 0 12px}.fill{height:100%;background:var(--blue2);border-radius:999px}
+.badge{display:inline-block;padding:5px 9px;background:#edf2ff;color:var(--blue);border-radius:999px;font-size:12px;font-weight:800;margin:2px}
+.compare{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.compare .box{border:1px solid var(--line);border-radius:16px;padding:14px;background:white}.compare h4{margin:0 0 8px}.compare p{font-size:13px;margin:3px 0}
+.callout{border-left:5px solid var(--blue);background:#f1f5ff;border-radius:12px;padding:12px 14px;margin-top:12px}
+.q{font-weight:900;font-size:20px;line-height:1.55;margin-bottom:13px}.ans{width:100%;border:1px solid var(--line);background:#fff;border-radius:14px;padding:14px;text-align:left;margin:7px 0}.ans.ok{border-color:#168464;background:#edf9f5}.ans.ng{border-color:#c74646;background:#fff1f1}.explain{margin-top:12px;padding:13px;border-radius:14px;background:#f5f7fb;display:none;line-height:1.65}
+.pillnav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));z-index:30;background:#172033;color:white;border-radius:999px;padding:7px;display:flex;gap:3px;box-shadow:0 12px 35px rgba(23,32,51,.25)}
+.pillnav button{border:0;background:transparent;color:white;padding:9px 14px;border-radius:999px;font-weight:800}.pillnav button.active{background:white;color:#172033}
+.small{font-size:12px;color:var(--muted)}
+.usecase{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.use{border:1px solid var(--line);border-radius:16px;padding:14px}.use strong{font-size:16px}.spec{margin-top:7px;font-size:13px;line-height:1.5;color:#46536a}
+@media(max-width:600px){
+ .hero h1{font-size:25px}.hero-art{width:135px}.menu{min-height:132px;padding:15px}.menu h3{font-size:16px}
+ .chiprow{grid-template-columns:repeat(2,1fr)}.compare{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg);text-align:center}
+ .usecase{grid-template-columns:1fr}.pagehead h2{font-size:24px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="toprow">
+<button class="back" id="back" onclick="goHome()">← 戻る</button>
+<div class="logo">💻</div><div><div class="title">パソコン販買マスター</div><div class="ver">Risa Edition ・ Ver.1.0.0</div></div>
+</div></header>
+
+<main class="home" id="home">
+<section class="hero">
+<h1>パソコンは、<br>「3つ」で考える。</h1>
+<p>何に使う？ → どこで使う？ → 何年使いたい？<br>難しいスペックを、図で接客につなげる。</p>
+<svg class="hero-art" viewBox="0 0 220 170" aria-hidden="true"><rect x="22" y="18" rx="16" width="175" height="105" fill="none" stroke="white" stroke-width="10"/><path d="M79 147h62M110 124v23" stroke="white" stroke-width="10" stroke-linecap="round"/><rect x="76" y="43" width="68" height="52" rx="10" fill="none" stroke="white" stroke-width="7"/></svg>
+</section>
+<div class="grid">
+<button class="menu" onclick="openSec('basic')"><div class="ico">🧠</div><h3>PC超基礎</h3><p>CPU・メモリ・SSD・GPUを絵で理解</p></button>
+<button class="menu" onclick="openSec('cpu')"><div class="ico">⚙️</div><h3>CPU攻略</h3><p>Core Ultra・Ryzen・AI PCの見方</p></button>
+<button class="menu" onclick="openSec('use')"><div class="ico">👤</div><h3>用途別おすすめ</h3><p>お客様の使い方から必要性能を逆算</p></button>
+<button class="menu" onclick="openSec('ports')"><div class="ico">🔌</div><h3>端子図鑑</h3><p>USB・HDMI・SDを見た目で判別</p></button>
+<button class="menu" onclick="openSec('maker')"><div class="ico">🏭</div><h3>メーカー比較</h3><p>国内系・海外系を接客目線で整理</p></button>
+<button class="menu" onclick="openSec('quiz')"><div class="ico">🎯</div><h3>今日の10問</h3><p>答え位置は毎回シャッフル</p></button>
+</div>
+</main>
+
+<section class="section" id="basic">
+<div class="pagehead"><h2>PC超基礎</h2><p>まずはこの4つ。パソコンの性能は「人が仕事する部屋」で考えると分かりやすい。</p></div>
+<div class="card"><h3>🧠 CPU＝作業する人</h3><p>計算や指示を処理する中心。性能が高いほど、複数の処理や重い作業をこなしやすい。</p>
+<div class="diagram"><div class="flow"><div class="flowbox">📩 指示が来る</div><div class="arrow">→</div><div class="flowbox">🧠 CPUが考える</div><div class="arrow">→</div><div class="flowbox">✅ 結果を出す</div></div></div></div>
+<div class="card"><h3>🗂️ メモリ＝作業机</h3><p>今使っているデータを広げる場所。机が広いほど、ブラウザ・Word・Zoomなどを同時に開きやすい。</p>
+<div class="diagram"><div class="compare"><div class="box"><h4>8GB</h4><p>📄 📄 ☕</p><p>軽めの普段使い</p></div><div class="box"><h4>16GB</h4><p>📄 🌐 🎥 📊</p><p>仕事・学習も余裕を持たせやすい</p></div><div class="box"><h4>32GB</h4><p>🎬 🎨 📊 🌐 📄</p><p>重い編集や多重作業向け</p></div></div></div></div>
+<div class="card"><h3>🧳 SSD＝収納</h3><p>写真・動画・アプリを保存する場所。容量は「速さ」ではなく、まず「どれだけ入るか」を考える。</p>
+<div class="diagram"><b>256GB</b><div class="bar"><div class="fill" style="width:25%"></div></div><b>512GB</b><div class="bar"><div class="fill" style="width:50%"></div></div><b>1TB</b><div class="bar"><div class="fill" style="width:100%"></div></div></div></div>
+<div class="card"><h3>🎨 GPU＝映像担当</h3><p>画面描画や画像・動画処理を担当。ネットやOffice中心なら内蔵GPUで足りる場合が多く、3Dゲームや本格的な動画編集では独立GPUが候補になる。</p></div>
+</section>
+
+<section class="section" id="cpu">
+<div class="pagehead"><h2>CPU攻略</h2><p>「Core i7だから上」と名前だけで決めない。世代・シリーズ・用途まで見る。</p></div>
+<div class="card"><h3>Intel Core Ultra</h3><div class="chiprow"><div class="chip"><div class="bigico">🟦</div><b>Ultra 5</b><span>主流クラス</span></div><div class="chip"><div class="bigico">🟦</div><b>Ultra 7</b><span>高性能クラス</span></div><div class="chip"><div class="bigico">🟦</div><b>Ultra 9</b><span>上位クラス</span></div><div class="chip"><div class="bigico">🔢</div><b>Series</b><span>世代も確認</span></div></div>
+<div class="callout"><b>接客ポイント：</b> 同じ「Ultra 7」でも世代・末尾記号・PC本体の冷却設計などで性能は変わる。名前だけで断定しない。</div></div>
+<div class="card"><h3>AMD Ryzen / Ryzen AI</h3><p>Ryzenも「5・7・9」のクラスだけでなく、世代や型番を確認。Ryzen AI系はNPUを搭載する製品があり、AI処理をPC内で行いやすい。</p></div>
+<div class="card"><h3>🤖 Copilot+ PCって？</h3>
+<div class="diagram"><div class="flow"><div class="flowbox">🧠 CPU<br><span class="small">一般処理</span></div><div class="arrow">＋</div><div class="flowbox">🎨 GPU<br><span class="small">映像・並列処理</span></div><div class="arrow">＋</div><div class="flowbox">✨ NPU<br><span class="small">AI処理向け</span></div></div></div>
+<p>Copilot+ PCは、40 TOPS以上のNPUを備えることが要件の一つ。AI PCという言葉とCopilot+ PCは、同じ意味として扱わない。</p>
+<span class="badge">NPU 40+ TOPS</span><span class="badge">Windows 11</span></div>
+</section>
+
+<section class="section" id="use">
+<div class="pagehead"><h2>用途別おすすめ</h2><p>商品から入らず、「何をするか」からスペックを決める。</p></div>
+<div class="card"><div class="usecase">
+<div class="use"><strong>🌐 ネット・動画中心</strong><div class="spec">軽い用途。価格・画面・使いやすさを重視。メモリやSSDは将来の使い方も聞く。</div></div>
+<div class="use"><strong>📝 Office・仕事</strong><div class="spec">複数アプリを同時に使うならメモリに余裕を。Web会議ならカメラ・マイク・端子も重要。</div></div>
+<div class="use"><strong>🎓 学生</strong><div class="spec">持ち運びなら重量と電池。学校指定ソフト・必要端子・OS条件を先に確認。</div></div>
+<div class="use"><strong>📷 写真をたくさん保存</strong><div class="spec">SSD容量を重視。外付けSSDやクラウドも含めてバックアップ方法まで提案。</div></div>
+<div class="use"><strong>🎬 動画編集</strong><div class="spec">CPU・メモリ・GPU・SSDを総合確認。編集ソフトの推奨環境を優先。</div></div>
+<div class="use"><strong>🎮 PCゲーム</strong><div class="spec">遊びたいゲーム名を聞く。GPUだけでなく、画面のリフレッシュレートや冷却も確認。</div></div>
+</div></div>
+<div class="card"><h3>接客の順番</h3><div class="diagram"><div class="flow"><div class="flowbox">① 用途</div><div class="arrow">→</div><div class="flowbox">② 持ち運び</div><div class="arrow">→</div><div class="flowbox">③ 保存量</div></div><div style="height:8px"></div><div class="flow"><div class="flowbox">④ ソフト</div><div class="arrow">→</div><div class="flowbox">⑤ 予算</div><div class="arrow">→</div><div class="flowbox">⑥ 将来性</div></div></div></div>
+</section>
+
+<section class="section" id="ports">
+<div class="pagehead"><h2>端子図鑑</h2><p>名前ではなく「形」と「何につなぐか」をセットで覚える。</p></div>
+<div class="card"><h3>USB-A</h3><div class="diagram"><svg viewBox="0 0 400 120" width="100%" height="110"><rect x="90" y="28" width="220" height="64" rx="8" fill="#fff" stroke="#172033" stroke-width="5"/><rect x="120" y="42" width="75" height="36" rx="3" fill="#eef2fa" stroke="#68738a" stroke-width="3"/><rect x="205" y="42" width="75" height="36" rx="3" fill="#eef2fa" stroke="#68738a" stroke-width="3"/></svg></div><p>マウス・USBメモリなどでよく使う長方形の端子。</p></div>
+<div class="card"><h3>USB-C</h3><div class="diagram"><svg viewBox="0 0 400 120" width="100%" height="110"><rect x="95" y="30" width="210" height="60" rx="30" fill="#fff" stroke="#172033" stroke-width="5"/><rect x="135" y="53" width="130" height="14" rx="7" fill="#dfe5f0"/></svg></div><p>小さな楕円形。ただし「USB-Cの形＝全部同じ機能」ではない。充電・映像出力・データ速度は製品仕様を確認。</p></div>
+<div class="card"><h3>HDMI</h3><div class="diagram"><svg viewBox="0 0 400 120" width="100%" height="110"><path d="M110 35h180l28 20-18 35H100L82 55z" fill="#fff" stroke="#172033" stroke-width="5"/><rect x="128" y="51" width="144" height="23" rx="4" fill="#dfe5f0"/></svg></div><p>テレビ・モニター・プロジェクターへの映像／音声出力でよく使う。</p></div>
+</section>
+
+<section class="section" id="maker">
+<div class="pagehead"><h2>メーカー比較</h2><p>メーカー名だけで優劣を決めず、シリーズ・保証・サポート・価格・用途で比較する。</p></div>
+<div class="card"><h3>🇯🇵 国内系ブランド</h3><p><b>NEC / 富士通 / dynabook など</b></p><p>店頭では、サポート内容、日本語マニュアル、搭載ソフト、キーボード配列などを確認材料にしやすい。モデルごとの差が大きいのでシリーズ単位で比較する。</p></div>
+<div class="card"><h3>🌍 グローバル系ブランド</h3><p><b>Lenovo / HP / Dell / ASUS など</b></p><p>価格帯・構成の選択肢が広い。直販専用構成と量販店モデルで仕様が異なることもあるため、型番単位で確認する。</p></div>
+<div class="callout"><b>Ver.1方針：</b> メーカーの「イメージ」で断定せず、現行モデルの正式仕様を確認して比較する。次版でシリーズ別比較を拡充。</div>
+</section>
+
+<section class="section" id="quiz">
+<div class="pagehead"><h2>今日の10問</h2><p>基礎を接客判断につなげる。正解位置は毎回変わる。</p></div>
+<div class="card"><div id="quizbox"></div></div>
+</section>
+</div>
+
+<div class="pillnav"><button id="navhome" class="active" onclick="goHome()">⌂ ホーム</button><button onclick="openSec('basic')">基礎</button><button onclick="openSec('quiz')">10問</button></div>
+
+<script>
+const sections=[...document.querySelectorAll('.section')], home=document.getElementById('home'), back=document.getElementById('back');
+function openSec(id){home.classList.add('hidden');sections.forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');back.style.display='block';scrollTo(0,0);if(id==='quiz') startQuiz()}
+function goHome(){sections.forEach(s=>s.classList.remove('active'));home.classList.remove('hidden');back.style.display='none';scrollTo(0,0)}
+const questions=[
+ {q:'メモリを「作業机」に例える理由として最も適切なのは？',a:'今使うデータを一時的に広げる場所だから',w:['写真を永久保存する場所だから','画面サイズを決める部品だから','Wi-Fi速度を決める部品だから'],e:'メモリは作業中のデータを置く場所。複数アプリを使う余裕に関係します。'},
+ {q:'USB-C端子を見つけた時の説明として適切なのは？',a:'同じ形でも充電や映像出力など対応機能は製品ごとに確認する',w:['必ず映像出力に対応する','必ずThunderbolt対応である','USB-Aより必ず高速である'],e:'USB-Cは端子の「形」。対応規格や機能は仕様確認が必要です。'},
+ {q:'動画編集用PCを選ぶ時、最も適切な確認は？',a:'使用する編集ソフトの推奨環境を確認する',w:['CPU名だけで決める','SSD容量だけで決める','メーカー名だけで決める'],e:'動画編集はCPU・メモリ・GPUなど複数要素が関係します。まずソフト側の要件確認が安全です。'},
+ {q:'Copilot+ PCの説明として適切なのは？',a:'40 TOPS以上のNPUが要件の一つ',w:['Core UltraならすべてCopilot+ PC','AI PCという表記があれば必ずCopilot+ PC','GPUがあればNPUは不要'],e:'Copilot+ PCには高性能NPUなどの要件があります。単なる「AI PC」と同義ではありません。'},
+ {q:'SSD容量を提案する時に最初に聞きたいことは？',a:'写真・動画・データをどれくらい保存するか',w:['マウスの色','プリンターのメーカー','デスクの高さ'],e:'容量選びは保存量と今後の使い方が中心です。'},
+ {q:'PCゲーム目的のお客様への確認として適切なのは？',a:'遊びたいゲーム名や必要動作環境を確認する',w:['とにかく一番高いGPUをすすめる','画面サイズだけ聞く','SSDが1TBならゲーム性能も高いと判断する'],e:'ゲームごとに要求性能が違うため、タイトルや推奨環境の確認が重要です。'},
+ {q:'Intel Core Ultraを見る時に気をつけることは？',a:'Ultra 5/7/9だけでなくSeriesや型番も確認する',w:['Ultra 7なら世代に関係なく同性能','数字が同じならすべて同じCPU','メーカーPCならCPU差はない'],e:'同じ性能帯の名称でも世代や型番が異なります。'},
+ {q:'持ち運びが多い学生向けPCで重要な確認は？',a:'重量・バッテリー・学校指定ソフトなど',w:['本体色だけ','スピーカー音量だけ','SSDメーカーだけ'],e:'用途と学校側の条件を満たした上で、持ち運びやすさを見るのが基本です。'},
+ {q:'独立GPUを検討しやすい用途は？',a:'3Dゲームや本格的な動画編集',w:['文章入力だけ','Web閲覧だけ','メール確認だけ'],e:'重い映像処理では独立GPUが候補になります。'},
+ {q:'メーカー比較で最も適切な考え方は？',a:'メーカー名だけでなく型番・シリーズ単位の仕様で比較する',w:['国内メーカーなら必ず高性能','海外メーカーなら必ず安い','同じメーカーなら全機種ほぼ同じ'],e:'シリーズや型番ごとの差が大きいため、ブランドイメージだけで断定しません。'}
+];
+let qi=0,score=0,order=[];
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function startQuiz(){qi=0;score=0;order=shuffle(questions);renderQ()}
+function renderQ(){
+ const box=document.getElementById('quizbox');
+ if(qi>=10){box.innerHTML=`<div class="q">結果：${score} / 10</div><p>${score>=8?'かなり良い理解度。':'解説を見ながらもう一度やってみよう。'}</p><button class="ans" onclick="startQuiz()">もう一度10問</button>`;return}
+ const x=order[qi], choices=shuffle([x.a,...x.w]);
+ box.innerHTML=`<div class="small">Q${qi+1} / 10</div><div class="q">${x.q}</div>${choices.map(c=>`<button class="ans" onclick='answer(this,${JSON.stringify(c)},${JSON.stringify(x.a)})'>${c}</button>`).join('')}<div class="explain" id="exp">${x.e}<br><button class="ans" style="margin-top:10px" onclick="nextQ()">次の問題 →</button></div>`;
+}
+function answer(btn,val,correct){
+ document.querySelectorAll('#quizbox .ans').forEach(b=>b.disabled=true);
+ if(val===correct){btn.classList.add('ok');score++}else{btn.classList.add('ng');[...document.querySelectorAll('#quizbox .ans')].find(b=>b.textContent===correct)?.classList.add('ok')}
+ document.getElementById('exp').style.display='block'
+}
+function nextQ(){qi++;renderQ()}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{})}
+</script>
+</body></html>
