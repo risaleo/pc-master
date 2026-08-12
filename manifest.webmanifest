@@ -3,8 +3,8 @@
   "short_name": "PC販買マスター",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f6f8fc",
-  "theme_color": "#23458c",
+  "background_color": "#f4f7fc",
+  "theme_color": "#0e255b",
   "icons": [
     {
       "src": "icon-192.png",
